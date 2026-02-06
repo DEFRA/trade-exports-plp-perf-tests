@@ -1,4 +1,4 @@
-# cdp-perf-test-suite-template
+# trade-exports-plp-perf-tests
 
 A JMeter based test runner for the CDP Platform.
 
