@@ -15,6 +15,24 @@ A successful build results in a Docker container that is capable of running your
 The performance test suites are designed to be run from the CDP Portal.
 The CDP Platform runs test suites in much the same way it runs any other service, it takes a docker image and runs it as an ECS task, automatically provisioning infrastructure as required.
 
+### Using Profiles to Run Specific JMeter Scripts
+
+Profiles allow you to run different JMeter test scripts without changing the code. When running tests from the CDP Portal:
+
+1. Go to your test suite page
+2. In the `Run` section, press `Yes` under `Profile`
+3. Enter the name of the JMeter script you want to run (without the `.jmx` extension)
+4. Press `Start`
+
+For example, if you have the following scripts in the `scenarios/` folder:
+- `test.jmx` - Default health check test
+- `load.jmx` - Load testing scenario
+- `stress.jmx` - Stress testing scenario
+
+You can run them by setting the profile to `test`, `load`, or `stress` respectively.
+
+If no profile is specified, the default `test.jmx` script will be run.
+
 ## Local Testing with Docker Compose
 
 You can run the entire performance test stack locally using Docker Compose, including LocalStack, Redis, and the target service. This is useful for development, integration testing, or verifying your test scripts **before committing to `main`**, which will trigger GitHub Actions to build and publish the Docker image.

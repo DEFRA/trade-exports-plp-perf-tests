@@ -2,6 +2,7 @@
 set -x
 
 echo "run_id: $RUN_ID in $ENVIRONMENT"
+echo "profile: $PROFILE"
 
 NOW=$(date +"%Y%m%d-%H%M%S")
 
@@ -15,7 +16,9 @@ JM_LOGS=${JM_HOME}/logs
 
 mkdir -p ${JM_REPORTS} ${JM_LOGS}
 
-TEST_SCENARIO=${TEST_SCENARIO:-test}
+# Use PROFILE environment variable if set, otherwise fall back to TEST_SCENARIO or default to 'test'
+# This allows selecting different JMeter scripts via the CDP Portal profile option
+TEST_SCENARIO=${PROFILE:-${TEST_SCENARIO:-test}}
 SCENARIOFILE=${JM_SCENARIOS}/${TEST_SCENARIO}.jmx
 REPORTFILE=${NOW}-perftest-${TEST_SCENARIO}-report.csv
 LOGFILE=${JM_LOGS}/perftest-${TEST_SCENARIO}.log
