@@ -30,12 +30,20 @@ SERVICE_ENDPOINT=${SERVICE_ENDPOINT:-trade-exports-packinglistparser.${ENVIRONME
 SERVICE_PORT=${SERVICE_PORT:-443}
 SERVICE_URL_SCHEME=${SERVICE_URL_SCHEME:-https}
 
+# Log all configuration values
+echo "=== Configuration ==="
+echo "PACKING_LIST_BASE_URL: $packingListBaseUrl"
+echo "DEFAULT_ESTABLISHMENT_ID: $defaultEstablishmentId"
+echo "====================="
+
 # Run the test suite
 jmeter -n -t ${SCENARIOFILE} -e -l "${REPORTFILE}" -o ${JM_REPORTS} -j ${LOGFILE} -f \
 -Jenv="${ENVIRONMENT}" \
 -Jdomain="${SERVICE_ENDPOINT}" \
 -Jport="${SERVICE_PORT}" \
--Jprotocol="${SERVICE_URL_SCHEME}"
+-Jprotocol="${SERVICE_URL_SCHEME}" \
+-JpackingListBaseUrl="${packingListBaseUrl}" \
+-JdefaultEstablishmentId="${defaultEstablishmentId}"
 
 # Publish the results into S3 so they can be displayed in the CDP Portal
 if [ -n "$RESULTS_OUTPUT_S3_PATH" ]; then
