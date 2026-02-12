@@ -30,6 +30,20 @@
           <stringProp name="variableNames">application_id,filename</stringProp>
         </CSVDataSet>
         <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="Log Variables" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="cacheKey">true</stringProp>
+          <stringProp name="script">log.info("=== Variable Debug ===")
+log.info("packingListBaseUrl: " + props.get("packingListBaseUrl"))
+log.info("defaultEstablishmentId: " + props.get("defaultEstablishmentId"))
+log.info("env: " + props.get("env"))
+log.info("application_id: " + vars.get("application_id"))
+log.info("filename: " + vars.get("filename"))
+log.info("======================")</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Process Packing List Request">
           <stringProp name="TestPlan.comments">Tests the process-packing-list endpoint with packing list blob data.</stringProp>
           <stringProp name="HTTPSampler.domain">${__P(domain, trade-exports-packinglistparser.${__P(env)}.cdp-int.defra.cloud)}</stringProp>
@@ -104,6 +118,7 @@
             <threadCounts>true</threadCounts>
             <idleTime>true</idleTime>
             <connectTime>true</connectTime>
+            <elapsed>true</elapsed>
           </value>
         </objProp>
         <stringProp name="filename">process-packing-list-report.csv</stringProp>
