@@ -52,7 +52,7 @@ services:
 
   service:
     # replace service-name with the name of your service being performace tested
-    image: defradigital/service-name:${SERVICE_VERSION:-latest}
+    image: defradigital/trade-exports-packinglistparser:${SERVICE_VERSION:-latest}
     ports:
       - '3000:3000'
     links:
