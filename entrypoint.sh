@@ -45,6 +45,26 @@ jmeter -n -t ${SCENARIOFILE} -e -l "${REPORTFILE}" -o ${JM_REPORTS} -j ${LOGFILE
 -JpackingListBaseUrl="${packingListBaseUrl}" \
 -JdefaultEstablishmentId="${defaultEstablishmentId}"
 
+# Debug: Check results file
+echo "=== Results File Debug ==="
+echo "Results file: ${REPORTFILE}"
+if [ -f "${REPORTFILE}" ]; then
+  echo "Results file exists"
+  echo "Line count: $(wc -l < "${REPORTFILE}")"
+  echo "First 20 lines:"
+  head -20 "${REPORTFILE}"
+else
+  echo "Results file NOT found"
+fi
+echo "=== CSV Data File Debug ==="
+if [ -f "/opt/perftest/data/applications.csv" ]; then
+  echo "CSV file exists"
+  cat /opt/perftest/data/applications.csv
+else
+  echo "CSV file NOT found at /opt/perftest/data/applications.csv"
+fi
+echo "==========================="
+
 # Publish the results into S3 so they can be displayed in the CDP Portal
 if [ -n "$RESULTS_OUTPUT_S3_PATH" ]; then
   # Copy the CSV report file and the generated report files to the S3 bucket
