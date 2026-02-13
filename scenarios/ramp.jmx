@@ -94,18 +94,18 @@ return (long)delay
             <stringProp name="scriptLanguage">groovy</stringProp>
             <stringProp name="script">
 // Reset error count at the start of the test
-if (ctx.getThreadNum() == 0 && ctx.getIteration() == 1) {
-    props.put('error.count', '0')
+if (ctx.getThreadNum() == 0 &amp;&amp; ctx.getIteration() == 1) {
+  props.put('error.count', '0')
 }
 
 if (!prev.isSuccessful()) {
-    def count = (props.get('error.count') ?: '0') as int
-    count++
-    props.put('error.count', count.toString())
-    if (count >= 10) {
-        log.info('Error count reached 10, stopping test.')
-        org.apache.jmeter.engine.StandardJMeterEngine.stopEngineNow()
-    }
+  def count = (props.get('error.count') ?: '0') as int
+  count++
+  props.put('error.count', count.toString())
+  if (count &gt;= 10) {
+    log.info('Error count reached 10, stopping test.')
+    org.apache.jmeter.engine.StandardJMeterEngine.stopEngineNow()
+  }
 }
             </stringProp>
           </JSR223PostProcessor>
