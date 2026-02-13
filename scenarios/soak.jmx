@@ -44,10 +44,10 @@
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Process Packing List Request">
           <stringProp name="TestPlan.comments">Tests the process-packing-list endpoint with packing list blob data.</stringProp>
-          <stringProp name="HTTPSampler.domain">${__P(domain, trade-exports-packinglistparser.${__P(env)}.cdp-int.defra.cloud)}?stopDataExit=true</stringProp>
+          <stringProp name="HTTPSampler.domain">${__P(domain, trade-exports-packinglistparser.${__P(env)}.cdp-int.defra.cloud)}</stringProp>
           <stringProp name="HTTPSampler.protocol">${__P(protocol, https)}</stringProp>
           <stringProp name="HTTPSampler.port">${__P(port, 443)}</stringProp>
-          <stringProp name="HTTPSampler.path">/process-packing-list</stringProp>
+          <stringProp name="HTTPSampler.path">/process-packing-list?stopDataExit=true</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
