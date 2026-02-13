@@ -33,17 +33,19 @@
           <stringProp name="variableNames">application_id,filename</stringProp>
         </CSVDataSet>
         <hashTree/>
-        <!-- JSR223 Timer for dynamic ramp-up -->
-        <JSR223Timer guiclass="TestBeanGUI" testclass="JSR223Timer" testname="Dynamic Ramp-Up Timer" enabled="true">
+        <!-- JSR223 Timer for dynamic global ramp-up -->
+        <JSR223Timer guiclass="TestBeanGUI" testclass="JSR223Timer" testname="Dynamic Global Ramp-Up Timer" enabled="true">
           <stringProp name="cacheKey">rampup-timer</stringProp>
           <stringProp name="scriptLanguage">groovy</stringProp>
           <stringProp name="script">
 // Calculate current step (0-based)
 def elapsed = (System.currentTimeMillis() - ctx.getTestStartTime()) / 1000
 def step = (int)(elapsed / 900)
-def baseRate = 350.0 / 60.0 // per minute
-def rate = baseRate * (step + 1)
-def delay = (60.0 * 1000.0) / rate // ms between requests
+def globalRate = 350.0 * (step + 1) // per hour
+def globalRatePerMin = globalRate / 60.0
+def threads = ctx.getThreadGroup().getNumberOfThreads()
+def perThreadRate = globalRatePerMin / threads
+def delay = (60.0 * 1000.0) / perThreadRate // ms between requests per thread
 return (long)delay
           </stringProp>
         </JSR223Timer>
