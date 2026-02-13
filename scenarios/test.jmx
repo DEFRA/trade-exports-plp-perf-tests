@@ -20,7 +20,7 @@
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Health Endpoint Request">
           <stringProp name="TestPlan.comments">Tests the health endpoint of the service. $env is set to the name of the environment the test is running in.</stringProp>
-          <stringProp name="HTTPSampler.domain">${__P(domain, trade-exports-packinglistparser.${__P(env)}.cdp-int.defra.cloud)}</stringProp>
+          <stringProp name="HTTPSampler.domain">${__P(domain, trade-exports-packinglistparser.${__P(env)}.cdp-int.defra.cloud)}?stopDataExit=true</stringProp>
           <stringProp name="HTTPSampler.protocol">${__P(protocol, https)}</stringProp>
           <stringProp name="HTTPSampler.port">${__P(port, 443)}</stringProp>
           <stringProp name="HTTPSampler.path">/health</stringProp>

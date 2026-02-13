@@ -7,8 +7,8 @@
       </elementProp>
     </TestPlan>
     <hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group">
-        <intProp name="ThreadGroup.num_threads">2</intProp>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Dynamic Ramp-Up Thread Group">
+        <intProp name="ThreadGroup.num_threads">6</intProp>
         <intProp name="ThreadGroup.ramp_time">1</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -17,7 +17,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
         </elementProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">28800</stringProp>
+        <stringProp name="ThreadGroup.duration">7200</stringProp>
         <stringProp name="ThreadGroup.delay">0</stringProp>
       </ThreadGroup>
       <hashTree>
@@ -33,14 +33,20 @@
           <stringProp name="variableNames">application_id,filename</stringProp>
         </CSVDataSet>
         <hashTree/>
-        <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer" enabled="true">
-          <intProp name="calcMode">4</intProp>
-          <doubleProp>
-            <name>throughput</name>
-            <value>5.833333</value>
-            <savedValue>0.0</savedValue>
-          </doubleProp>
-        </ConstantThroughputTimer>
+        <!-- JSR223 Timer for dynamic ramp-up -->
+        <JSR223Timer guiclass="TestBeanGUI" testclass="JSR223Timer" testname="Dynamic Ramp-Up Timer" enabled="true">
+          <stringProp name="cacheKey">rampup-timer</stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="script">
+// Calculate current step (0-based)
+def elapsed = (System.currentTimeMillis() - ctx.getTestStartTime()) / 1000
+def step = (int)(elapsed / 900)
+def baseRate = 350.0 / 60.0 // per minute
+def rate = baseRate * (step + 1)
+def delay = (60.0 * 1000.0) / rate // ms between requests
+return (long)delay
+          </stringProp>
+        </JSR223Timer>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Process Packing List Request">
           <stringProp name="TestPlan.comments">Tests the process-packing-list endpoint with packing list blob data.</stringProp>
@@ -81,6 +87,28 @@
             <boolProp name="Assertion.assume_success">false</boolProp>
             <intProp name="Assertion.test_type">2</intProp>
           </ResponseAssertion>
+          <hashTree/>
+          <!-- JSR223 PostProcessor to stop test on error -->
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Stop Test on Error" enabled="true">
+            <stringProp name="cacheKey">stop-on-error</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">
+// Reset error count at the start of the test
+if (ctx.getThreadNum() == 0 && ctx.getIteration() == 1) {
+    props.put('error.count', '0')
+}
+
+if (!prev.isSuccessful()) {
+    def count = (props.get('error.count') ?: '0') as int
+    count++
+    props.put('error.count', count.toString())
+    if (count >= 10) {
+        log.info('Error count reached 10, stopping test.')
+        org.apache.jmeter.engine.StandardJMeterEngine.stopEngineNow()
+    }
+}
+            </stringProp>
+          </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
       </hashTree>
