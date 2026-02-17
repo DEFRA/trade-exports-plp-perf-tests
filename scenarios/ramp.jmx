@@ -52,14 +52,21 @@
           <stringProp name="variableNames">application_id,filename</stringProp>
         </CSVDataSet>
         <hashTree/>
-        <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer" enabled="true">
-          <intProp name="calcMode">4</intProp>
-          <doubleProp>
-            <name>throughput</name>
-            <value>${__groovy(((System.currentTimeMillis() - Long.parseLong(props.get('testStart') ?: ('' + System.currentTimeMillis()))) / 60000 + 1) * 5.833333)}</value>
-            <savedValue>0.0</savedValue>
-          </doubleProp>
-        </ConstantThroughputTimer>
+        <JSR223Timer guiclass="TestBeanGUI" testclass="JSR223Timer" testname="Dynamic Throughput Timer" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="script">// Compute dynamic throughput and return delay in ms
+long testStart = 0L
+try {
+  testStart = props.get('testStart') as String ? Long.parseLong(props.get('testStart')) : System.currentTimeMillis()
+} catch (Exception e) {
+  testStart = System.currentTimeMillis()
+}
+double elapsedMinutes = (System.currentTimeMillis() - testStart) / 60000.0
+double throughputPerMin = (elapsedMinutes + 1) * 5.833333
+if (throughputPerMin <= 0) throughputPerMin = 1.0
+long delayMs = (long)Math.max(0.0, 60000.0 / throughputPerMin)
+return delayMs</stringProp>
+        </JSR223Timer>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Process Packing List Request">
           <stringProp name="TestPlan.comments">Tests the process-packing-list endpoint with packing list blob data.</stringProp>
