@@ -54,7 +54,7 @@
         <hashTree/>
         <JSR223Timer guiclass="TestBeanGUI" testclass="JSR223Timer" testname="Dynamic Throughput Timer" enabled="true">
           <stringProp name="scriptLanguage">groovy</stringProp>
-          <stringProp name="script">// Compute dynamic throughput and return delay in ms
+          <stringProp name="script"><![CDATA[// Compute dynamic throughput and return delay in ms
 long testStart = 0L
 try {
   testStart = props.get('testStart') as String ? Long.parseLong(props.get('testStart')) : System.currentTimeMillis()
@@ -65,7 +65,7 @@ double elapsedMinutes = (System.currentTimeMillis() - testStart) / 60000.0
 double throughputPerMin = (elapsedMinutes + 1) * 5.833333
 if (throughputPerMin <= 0) throughputPerMin = 1.0
 long delayMs = (long)Math.max(0.0, 60000.0 / throughputPerMin)
-return delayMs</stringProp>
+return delayMs]]></stringProp>
         </JSR223Timer>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Process Packing List Request">
