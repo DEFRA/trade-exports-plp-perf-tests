@@ -62,8 +62,8 @@ try {
   testStart = System.currentTimeMillis()
 }
 double elapsedMinutes = (System.currentTimeMillis() - testStart) / 60000.0
-double throughputPerMin = (elapsedMinutes + 1) * 5.833333
-if (throughputPerMin <= 0) throughputPerMin = 1.0
+double interval = elapsedMinutes / 1.0 // this is the ramp up interval in minutes -> ramp up every 1 minute
+double throughputPerMin = (interval + 1) * 5.833333 // 5.83 -> 350 requests per hour
 long delayMs = (long)Math.max(0.0, 60000.0 / throughputPerMin)
 return delayMs]]></stringProp>
         </JSR223Timer>
